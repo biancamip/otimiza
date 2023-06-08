@@ -7,13 +7,14 @@ V = collect(1:3);
 m = Model();
 set_optimizer(m, GLPK.Optimizer);
 
-@variable(m, x[i in I, v in V] >= 0);
+@variable(m, x[i in I, v in V] >= 0);   ## xiv define o numero de garrafas i usadas na mistura v
 
 pv = [68 , 57, 45];
 ci = [70 , 50, 40];
 
 @variable(m, y[v in V]) ## total vendas
 @variable(m, z[i in I]) ## total importação
+
 @objective(m, Max, sum(pv[v] * y[v] for v in V) - sum(ci[i] * z[i] for i in I))
 @constraint(m, [v in V], y[v] == sum(x[i,v] for i in I))
 @constraint(m, [i in I], z[i] == sum(x[i,v] for v in V));
